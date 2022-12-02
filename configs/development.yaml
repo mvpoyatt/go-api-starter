@@ -1,0 +1,10 @@
+logger_level: debug
+db:
+  dbname: testdb
+  username: root
+  password: testp@$$9
+  hostname: 127.0.0.1
+  port: 3306
+server:
+  hostname: 127.0.0.1
+  port: 8080
