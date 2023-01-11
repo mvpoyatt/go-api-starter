@@ -25,7 +25,7 @@ func (s *UserServer) PutUser(
 	// Hash user's password before saving
 	password := req.Msg.Password
 	if len(password) < 5 {
-		err := errors.New("Password must be at least 5 characters")
+		err := errors.New("password must be at least 5 characters")
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
@@ -51,6 +51,12 @@ func (s *UserServer) PutUser(
 	res := connect.NewResponse(&userv1.PutUserResponse{
 		User: database.UserDatabaseToProtobuf(dbUser),
 	})
+	// return jwt along with response
+	if jwt, err := NewToken(email); err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	} else {
+		res.Header().Set("AuthToken", jwt)
+	}
 	res.Header().Set("User-Version", "v1")
 	return res, nil
 }
@@ -81,6 +87,12 @@ func (s *UserServer) LoginUser(
 		res := connect.NewResponse(&userv1.LoginUserResponse{
 			User: database.UserDatabaseToProtobuf(dbUser),
 		})
+		// return jwt along with response
+		if jwt, err := NewToken(email); err != nil {
+			return nil, connect.NewError(connect.CodeInternal, err)
+		} else {
+			res.Header().Set("AuthToken", jwt)
+		}
 		res.Header().Set("User-Version", "v1")
 		return res, nil
 	}
@@ -91,7 +103,11 @@ func (s *UserServer) GetUser(
 	req *connect.Request[userv1.GetUserRequest],
 ) (*connect.Response[userv1.GetUserResponse], error) {
 	// Validate request
-	email := req.Msg.Email
+	jwt := req.Header().Get("AuthToken")
+	email, err := ValidateToken(jwt)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeUnauthenticated, err)
+	}
 	if _, err := mail.ParseAddress(email); err != nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
@@ -118,7 +134,11 @@ func (s *UserServer) DeleteUser(
 	req *connect.Request[userv1.DeleteUserRequest],
 ) (*connect.Response[userv1.DeleteUserResponse], error) {
 	// Find user by email and delete by ID
-	email := req.Msg.Email
+	jwt := req.Header().Get("AuthToken")
+	email, err := ValidateToken(jwt)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeUnauthenticated, err)
+	}
 	var dbUser database.User
 	searchResult := database.Db.Where("email = ?", email).First(&dbUser)
 	if errors.Is(searchResult.Error, gorm.ErrRecordNotFound) {

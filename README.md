@@ -52,6 +52,6 @@ TODO:
 - Publish final API to BRS
 
 DO NEXT:
-- Finish deleteUser function
-- Determine if I want to return deltedAt as part of user
 - Try to hit connct-go endpoint from go-grpc client (regenerate that code)
+- Move jwt expiry time, secret-key, and password length to config file
+- Rebuild proto file to account for jwt auth

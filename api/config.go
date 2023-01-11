@@ -31,8 +31,7 @@ type UserServer struct{}
 func StartServer(configs ServerConfig) {
 	mux := http.NewServeMux()
 	user := &UserServer{}
-	interceptors := connect.WithInterceptors(AuthInterceptor())
-	path, handler := userv1connect.NewUserServiceHandler(user, interceptors)
+	path, handler := userv1connect.NewUserServiceHandler(user)
 	compress1KB := connect.WithCompressMinBytes(1024)
 
 	mux.Handle(path, handler)
