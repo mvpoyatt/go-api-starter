@@ -48,15 +48,14 @@ func (s *UserServer) PutUser(
 	if err := searchResult.Error; err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	res := connect.NewResponse(&userv1.PutUserResponse{
-		User: database.UserDatabaseToProtobuf(dbUser),
-	})
-	// return jwt along with response
-	if jwt, err := NewToken(email); err != nil {
+	// return jwt for future authorization by client
+	jwt, err := NewToken(email)
+	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
-	} else {
-		res.Header().Set("AuthToken", jwt)
 	}
+	res := connect.NewResponse(&userv1.PutUserResponse{
+		Token: jwt,
+	})
 	res.Header().Set("User-Version", "v1")
 	return res, nil
 }
@@ -84,15 +83,14 @@ func (s *UserServer) LoginUser(
 	if err := bcrypt.CompareHashAndPassword([]byte(dbPassword), []byte(password)); err != nil {
 		return nil, connect.NewError(connect.CodePermissionDenied, err)
 	} else {
-		res := connect.NewResponse(&userv1.LoginUserResponse{
-			User: database.UserDatabaseToProtobuf(dbUser),
-		})
-		// return jwt along with response
-		if jwt, err := NewToken(email); err != nil {
+		// return jwt for future authorization by client
+		jwt, err := NewToken(email)
+		if err != nil {
 			return nil, connect.NewError(connect.CodeInternal, err)
-		} else {
-			res.Header().Set("AuthToken", jwt)
 		}
+		res := connect.NewResponse(&userv1.LoginUserResponse{
+			Token: jwt,
+		})
 		res.Header().Set("User-Version", "v1")
 		return res, nil
 	}
@@ -103,13 +101,10 @@ func (s *UserServer) GetUser(
 	req *connect.Request[userv1.GetUserRequest],
 ) (*connect.Response[userv1.GetUserResponse], error) {
 	// Validate request
-	jwt := req.Header().Get("AuthToken")
+	jwt := req.Header().Get("Authorization")
 	email, err := ValidateToken(jwt)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeUnauthenticated, err)
-	}
-	if _, err := mail.ParseAddress(email); err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 
 	// Search Database for email
@@ -134,7 +129,7 @@ func (s *UserServer) DeleteUser(
 	req *connect.Request[userv1.DeleteUserRequest],
 ) (*connect.Response[userv1.DeleteUserResponse], error) {
 	// Find user by email and delete by ID
-	jwt := req.Header().Get("AuthToken")
+	jwt := req.Header().Get("Authorization")
 	email, err := ValidateToken(jwt)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeUnauthenticated, err)
