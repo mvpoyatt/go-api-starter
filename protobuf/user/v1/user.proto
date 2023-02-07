@@ -17,7 +17,7 @@ message PutUserRequest {
 }
 
 message PutUserResponse {
-  User user = 1;
+  string token = 1;
 }
 
 message LoginUserRequest {
@@ -26,20 +26,16 @@ message LoginUserRequest {
 }
 
 message LoginUserResponse {
-  User user = 1;
+  string token = 1;
 }
 
-message GetUserRequest {
-  string email = 1;
-}
+message GetUserRequest {}
 
 message GetUserResponse {
   User user = 1;
 }
 
-message DeleteUserRequest {
-  string email = 1;
-}
+message DeleteUserRequest {}
 
 message DeleteUserResponse {
   User user = 1;

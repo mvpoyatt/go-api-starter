@@ -6,6 +6,7 @@ require (
 	github.com/bufbuild/connect-go v1.1.0
 	github.com/bufbuild/connect-grpchealth-go v1.0.0
 	github.com/bufbuild/connect-grpcreflect-go v1.0.0
+	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/rs/cors v1.8.2
 	github.com/spf13/viper v1.13.0
 	go.uber.org/zap v1.23.0
