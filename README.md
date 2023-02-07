@@ -3,7 +3,7 @@
 
 This library is a starter for an API implemented in GoLang. It comes with user login functionality, logging capablities, environment-based configurations. If login functionality isn't required it can easily be used as an example and replaced with appropriate endpoint using the steps outlined below. Stack includes grpc, buf/connect-go, MySQL, and GORM. There is also an accompanying front-end starter built using Qwik to demo a typescript/client implementation of connect-go: [qwik-client-starter](https://github.com/mvpoyatt/qwik-client-starter) (WIP)
 
-## Run As-Is
+## Run As-Is :sake:
 
 **1. Install Go and Dependencies**
 - [Install Go](https://go.dev/doc/install)
@@ -25,7 +25,7 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 	$ go run entry/main.go
 	```
 
-## To Work with Buf
+## To Work with Buf :volcano:
 
 1. [Install buf tools](https://docs.buf.build/installation)
 	- (for Homebrew) ```$ brew install bufbuild/buf/buf```
@@ -46,7 +46,7 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 	```
 	- This generates code in ```gen/``` folder. Delete and re-run after changing ```.proto``` file.
 
-## Creating New Endpoints
+## Creating New Endpoints :electric_plug:
 
 
 1. Add new API folders to buf.work.yaml
