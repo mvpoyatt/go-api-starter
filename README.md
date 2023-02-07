@@ -34,10 +34,10 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 	```bash
 	$ go install github.com/bufbuild/buf/cmd/buf@latest
 	$ go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-  $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-  $ go install github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
-  $ [ -n "$(go env GOBIN)" ] && export PATH="$(go env GOBIN):${PATH}"
-  $ [ -n "$(go env GOPATH)" ] && export PATH="$(go env GOPATH)/bin:${PATH}"
+    $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+    $ go install github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
+    $ [ -n "$(go env GOBIN)" ] && export PATH="$(go env GOBIN):${PATH}"
+    $ [ -n "$(go env GOPATH)" ] && export PATH="$(go env GOPATH)/bin:${PATH}"
 	```
 3. Remove existing code and re-generate
 	```bash
