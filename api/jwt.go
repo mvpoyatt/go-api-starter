@@ -1,9 +1,12 @@
 package api
 
 import (
+	"context"
 	"errors"
+	"strings"
 	"time"
 
+	"github.com/bufbuild/connect-go"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -50,4 +53,28 @@ func ValidateToken(tokenString string) (string, error) {
 	} else {
 		return "", errors.New("invalid login")
 	}
+}
+
+func AuthInterceptor() connect.UnaryInterceptorFunc {
+	interceptor := func(next connect.UnaryFunc) connect.UnaryFunc {
+		return connect.UnaryFunc(func(
+			ctx context.Context,
+			req connect.AnyRequest,
+		) (connect.AnyResponse, error) {
+			path := strings.Split(req.Spec().Procedure, "/")
+			endpoint := path[len(path)-1]
+			if endpoint == "PutUser" || endpoint == "LoginUser" {
+				return next(ctx, req)
+			}
+			token := req.Header().Get("Authorization")
+			email, err := ValidateToken(token)
+			if err != nil {
+				return nil, connect.NewError(connect.CodeUnauthenticated, err)
+			} else {
+				ctx = context.WithValue(ctx, "email", email)
+			}
+			return next(ctx, req)
+		})
+	}
+	return connect.UnaryInterceptorFunc(interceptor)
 }

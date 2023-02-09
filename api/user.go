@@ -100,13 +100,7 @@ func (s *UserServer) GetUser(
 	ctx context.Context,
 	req *connect.Request[userv1.GetUserRequest],
 ) (*connect.Response[userv1.GetUserResponse], error) {
-	// Validate request
-	jwt := req.Header().Get("Authorization")
-	email, err := ValidateToken(jwt)
-	if err != nil {
-		return nil, connect.NewError(connect.CodeUnauthenticated, err)
-	}
-
+	email := ctx.Value("email")
 	// Search Database for email
 	var dbUser database.User
 	result := database.Db.Where("email = ?", email).First(&dbUser)
@@ -128,12 +122,8 @@ func (s *UserServer) DeleteUser(
 	ctx context.Context,
 	req *connect.Request[userv1.DeleteUserRequest],
 ) (*connect.Response[userv1.DeleteUserResponse], error) {
+	email := ctx.Value("email")
 	// Find user by email and delete by ID
-	jwt := req.Header().Get("Authorization")
-	email, err := ValidateToken(jwt)
-	if err != nil {
-		return nil, connect.NewError(connect.CodeUnauthenticated, err)
-	}
 	var dbUser database.User
 	searchResult := database.Db.Where("email = ?", email).First(&dbUser)
 	if errors.Is(searchResult.Error, gorm.ErrRecordNotFound) {
