@@ -36,7 +36,6 @@ func LoadConfigs() {
 	filePath := "configs/" + Environment + ".yaml"
 	viper.SetConfigFile(filePath)
 	viper.SetConfigType("yaml")
-	// viper.ReadInConfig()
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Panicln("Cannot read config file: %w", err)

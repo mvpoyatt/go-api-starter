@@ -111,6 +111,7 @@ func newCORS() *cors.Cors {
 			"Grpc-Message",
 			"Grpc-Status",
 			"Grpc-Status-Details-Bin",
+			"Refresh-Token",
 		},
 		// Let browsers cache CORS information for longer, which reduces the number
 		// of preflight requests. Any changes to ExposedHeaders won't take effect
