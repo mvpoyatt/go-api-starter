@@ -115,6 +115,9 @@ func (s *UserServer) GetUser(
 		User: database.UserDatabaseToProtobuf(dbUser),
 	})
 	res.Header().Set("User-Version", "v1")
+	if refreshToken := ctx.Value("refreshToken"); refreshToken != nil {
+		res.Header().Add("Refresh-Token", refreshToken.(string))
+	}
 	return res, nil
 }
 

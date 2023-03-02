@@ -10,7 +10,13 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-var key = []byte("my_secret_key")
+var key = []byte("change_this")
+
+// Set how long login is valid for
+var tokenDuration = 5 * time.Minute
+
+// How close to end of session to create new token
+var refreshWindow = tokenDuration / 5
 
 type Claims struct {
 	Email string
@@ -18,7 +24,7 @@ type Claims struct {
 }
 
 func NewToken(email string) (string, error) {
-	expiryTime := time.Now().Add(5 * time.Minute)
+	expiryTime := time.Now().Add(tokenDuration)
 	claims := &Claims{
 		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -35,9 +41,9 @@ func NewToken(email string) (string, error) {
 	}
 }
 
-func ValidateToken(tokenString string) (string, error) {
+func ValidateToken(tokenString string) (string, string, error) {
 	if tokenString == "" {
-		return "", errors.New("authentication token not found")
+		return "", "", errors.New("authentication token not found")
 	}
 
 	claims := &Claims{}
@@ -45,13 +51,25 @@ func ValidateToken(tokenString string) (string, error) {
 		return key, nil
 	})
 	if err != nil {
-		return "", errors.New("problem parsing authentication token")
+		return "", "", errors.New("problem parsing authentication token")
 	}
 
 	if newClaims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return newClaims.Email, nil
+		refreshCutoff := newClaims.ExpiresAt.Time.Add(-refreshWindow)
+		if time.Now().After(refreshCutoff) {
+			// Token about to expire, send back a new token
+			if refreshToken, err := NewToken(newClaims.Email); err != nil {
+				// New token didn't work but still validate this request
+				return newClaims.Email, "", nil
+			} else {
+				return newClaims.Email, refreshToken, nil
+			}
+		} else {
+			// Token not about to expire, don't send back a new one
+			return newClaims.Email, "", nil
+		}
 	} else {
-		return "", errors.New("invalid login")
+		return "", "", errors.New("invalid login")
 	}
 }
 
@@ -67,11 +85,14 @@ func AuthInterceptor() connect.UnaryInterceptorFunc {
 				return next(ctx, req)
 			}
 			token := req.Header().Get("Authorization")
-			email, err := ValidateToken(token)
+			email, refreshToken, err := ValidateToken(token)
 			if err != nil {
 				return nil, connect.NewError(connect.CodeUnauthenticated, err)
 			} else {
 				ctx = context.WithValue(ctx, "email", email)
+				if refreshToken != "" {
+					ctx = context.WithValue(ctx, "refreshToken", refreshToken)
+				}
 			}
 			return next(ctx, req)
 		})

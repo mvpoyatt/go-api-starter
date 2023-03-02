@@ -62,11 +62,10 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 	```
 
 ## To-Do
-- Add token refresh function
-- add Makefile
+- Move password length to config file
 - Try hitting API from test-client using grpc protocol (save as part of setup?)
+- add Makefile
 - Revisit API configs
-- Move JWT expiry time, secret-key and password length to config file
 - Make DB conenction SSL once on server
 
 
