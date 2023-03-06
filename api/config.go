@@ -22,13 +22,17 @@ import (
 )
 
 type ServerConfig struct {
-	HostName string `mapstructure:"hostname"`
-	Port     string `mapstructure:"port"`
+	HostName       string `mapstructure:"hostname"`
+	Port           string `mapstructure:"port"`
+	PasswordLength int    `mapstructure:"password_length"`
 }
+
+var PasswordLength int
 
 type UserServer struct{}
 
 func StartServer(configs ServerConfig) {
+	PasswordLength = configs.PasswordLength
 	mux := http.NewServeMux()
 	user := &UserServer{}
 	interceptors := connect.WithInterceptors(AuthInterceptor())

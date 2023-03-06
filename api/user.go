@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/mail"
+	"strconv"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/mvpoyatt/go-api/database"
@@ -24,8 +25,8 @@ func (s *UserServer) PutUser(
 
 	// Hash user's password before saving
 	password := req.Msg.Password
-	if len(password) < 5 {
-		err := errors.New("password must be at least 5 characters")
+	if len(password) < PasswordLength {
+		err := errors.New("password must be at least " + strconv.Itoa(PasswordLength) + " characters")
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
