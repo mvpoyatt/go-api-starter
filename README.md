@@ -62,8 +62,6 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 	```
 
 ## To-Do
-- Move password length to config file
-- Try hitting API from test-client using grpc protocol (save as part of setup?)
 - add Makefile
 - Revisit API configs
 - Make DB conenction SSL once on server
