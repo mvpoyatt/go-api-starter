@@ -48,7 +48,6 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 
 ## Creating New Endpoints :electric_plug:
 
-
 1. Add new API folders to buf.work.yaml
 2. Update buf.gen.yaml for new:
 	  - Code generating plugins
@@ -60,12 +59,6 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 	$ buf build
 	$ buf generate
 	```
-
-## To-Do
-- add Makefile
-- Revisit API configs
-- Make DB conenction SSL once on server
-
 
 ## License
 
