@@ -1,7 +1,7 @@
 
 # Go API Starter
 
-This library is a starter for an API implemented in GoLang. It comes with user login functionality, logging capablities, environment-based configurations. If login functionality isn't required it can easily be used as an example and replaced with appropriate endpoint using the steps outlined below. Stack includes grpc, buf/connect-go, MySQL, and GORM. There is also an accompanying front-end starter built using Qwik to demo a typescript/client implementation of connect-go: [qwik-client-starter](https://github.com/mvpoyatt/qwik-client-starter) (WIP)
+This library is a starter for an API implemented in GoLang. It comes with user login functionality, logging capablities, and environment-based configurations. If login functionality isn't required it can easily be used as an example and replaced with appropriate endpoint logic using the steps outlined below. Stack includes grpc, buf/connect-go, MySQL, and GORM. There is also an accompanying front-end starter built using Qwik to demo a typescript/client implementation of connect-go: [qwik-client-starter](https://github.com/mvpoyatt/qwik-client-starter) (WIP)
 
 ## Run As-Is :sake:
 
@@ -28,17 +28,7 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 ## To Work with Buf :volcano:
 
 1. [Install buf tools](https://docs.buf.build/installation)
-	- (for Homebrew) ```$ brew install bufbuild/buf/buf```
 2. [Install connect tools](https://connect.build/docs/go/getting-started/)
-	- (for mac)
-	```bash
-	$ go install github.com/bufbuild/buf/cmd/buf@latest
-	$ go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-    $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-    $ go install github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
-    $ [ -n "$(go env GOBIN)" ] && export PATH="$(go env GOBIN):${PATH}"
-    $ [ -n "$(go env GOPATH)" ] && export PATH="$(go env GOPATH)/bin:${PATH}"
-	```
 3. Remove existing code and re-generate
 	```bash
 	$ rm -rf gen/
@@ -54,7 +44,7 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 	  - External packages (exlude default go_option prefixes)
 3. In home directory of project run
 	```bash
-	rm -rf gen  # reset existing generated code
+	$ rm -rf gen  # reset existing generated code
 	$ buf lint
 	$ buf build
 	$ buf generate
