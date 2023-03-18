@@ -3,3 +3,8 @@
 
 go.sum
 /.vscode
+
+# Specific builds
+user-service-darwin
+user-service-linux
+user-service-windows

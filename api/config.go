@@ -61,8 +61,8 @@ func StartServer(configs ServerConfig) {
 			&http2.Server{},
 		),
 		ReadHeaderTimeout: time.Second,
-		ReadTimeout:       5 * time.Minute,
-		WriteTimeout:      5 * time.Minute,
+		ReadTimeout:       5 * time.Second,
+		WriteTimeout:      10 * time.Second,
 		MaxHeaderBytes:    8 * 1024, // 8KiB
 	}
 
