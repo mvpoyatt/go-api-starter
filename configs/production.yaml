@@ -1,6 +1,6 @@
 logger_level: info
 db:
-  dbname: testdb
+  dbname: userdb
   username: root
   password: testp@$$9
   hostname: 127.0.0.1

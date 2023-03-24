@@ -22,7 +22,7 @@ This library is a starter for an API implemented in GoLang. It comes with user l
 **3. Start Server**
 - In root directory of project run
 	```bash
-	$ go run entry/main.go
+	$ go run main.go
 	```
 
 ## To Work with Buf :volcano:
